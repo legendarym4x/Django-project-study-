@@ -1,20 +1,25 @@
-<!DOCTYPE html>
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-<p>{{ menu | join:' | ' }}</p>
+{% extends 'base.html' %}
+
+{% block content %}
 <h1>{{ title }}</h1>
 
+{% include 'women/includes/nav.html' only with title2='fddgd' %}
+
 <ul>
-    {% for post in posts %}
+    {% for p in posts %}
+    {% if p.is_published %}
     <li>
-        <h2>{{ post.title }}</h2>
-        <p>{{ post.content }}</p>
+        <h2>{{ p.title }}</h2>
+        <p>{{ p.content }}</p>
+        <p><a href="{% url 'post' p.id %}">Read post</a></p>
+        {% if not forloop.last %}
         <hr>
+        {% endif %}
     </li>
+    {% endif %}
     {% endfor %}
 </ul>
-</body>
-</html>
+
+{% include 'women/includes/nav.html' %}
+
+{% endblock %}

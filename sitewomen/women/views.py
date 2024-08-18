@@ -3,9 +3,12 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.template.loader import render_to_string
 
-
-menu = ['About us', 'Add article', 'Feedback', 'Sign In']
-
+menu = [
+    {'title': "About us", 'url_name': 'about'},
+    {'title': "Add article", 'url_name': 'add_page'},
+    {'title': "Feedback", 'url_name': 'contact'},
+    {'title': "Sign In", 'url_name': 'login'}
+]
 
 data_db = [
     {'id': 1, 'title': 'Angelina Jolie', 'content': 'Angelina Jolie Biography', 'is_published': True},
@@ -14,11 +17,11 @@ data_db = [
 ]
 
 
-def index(request): # HttpRequest
+def index(request):  # HttpRequest
     # t = render_to_string('women/index.html')
     # return HttpResponse(t)
     data = {
-        'title': 'main page?',
+        'title': 'Main page',
         'menu': menu,
         'posts': data_db,
     }
@@ -26,27 +29,24 @@ def index(request): # HttpRequest
 
 
 def about(request):
-    return render(request, 'women/about.html', {'title': 'About us'})
+    return render(request, 'women/about.html', {'title': 'About us', 'menu': menu})
 
 
-def categories(request, cat_id):
-    return HttpResponse(f'<h1>Publications by categories</h1><p>id: {cat_id}</p>')
+def show_post(request, post_id):
+    return HttpResponse(f'Show post with id: {post_id}')
 
 
-def categories_by_slug(request, cat_slug):
-    if request.GET:
-        print(request.GET)
-    return HttpResponse(f'<h1>Publications by categories</h1><p>slug: {cat_slug}</p>')
+def add_page(request):
+    return HttpResponse('Add article')
 
 
-def archive(request, year):
-    if year > 2023:
-        uri = reverse('cats', args=('music', ))
-        return redirect(uri)
-    return HttpResponse(f'<h1>Archive by years</h1><p>{year}</p>')
+def contact(request):
+    return HttpResponse('Feedback')
+
+
+def login(request):
+    return HttpResponse('Sign In')
 
 
 def page_not_found(request, exception):
     return HttpResponseNotFound('<h1>Page Not Found</p>')
-
-
