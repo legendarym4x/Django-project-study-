@@ -11,9 +11,19 @@ menu = [
 ]
 
 data_db = [
-    {'id': 1, 'title': 'Angelina Jolie', 'content': 'Angelina Jolie Biography', 'is_published': True},
+    {'id': 1, 'title': 'Angelina Jolie', 'content': '''<h1>Angelina Jolie</h1> (born Angelina Jolie[7], formerly Jolie
+     Pitt; born June 4, 1975, Los Angeles, California, USA) is an American film, television and voice actress, film 
+     director, screenwriter, producer, model, and UN Goodwill Ambassador. Winner of an Academy Award, three Golden Globe
+     Awards (the first actress in history to win the award three years in a row), and two Screen Actors Guild Awards.
+     ''', 'is_published': True},
     {'id': 2, 'title': 'Margot Robbie', 'content': 'Margot Robbie Biography', 'is_published': False},
     {'id': 3, 'title': 'Julia Roberts', 'content': 'Julia Roberts Biography', 'is_published': True},
+]
+
+cats_db = [
+    {'id': 1, 'name': 'Actresses'},
+    {'id': 2, 'name': 'Singers'},
+    {'id': 3, 'name': 'Sportswomen'},
 ]
 
 
@@ -24,6 +34,7 @@ def index(request):  # HttpRequest
         'title': 'Main page',
         'menu': menu,
         'posts': data_db,
+        'cat_selected': 0,
     }
     return render(request, 'women/index.html', context=data)
 
@@ -46,6 +57,16 @@ def contact(request):
 
 def login(request):
     return HttpResponse('Sign In')
+
+
+def show_category(request, cat_id):
+    data = {
+        'title': 'Main page',
+        'menu': menu,
+        'posts': data_db,
+        'cat_selected': cat_id,
+    }
+    return render(request, 'women/index.html', context=data)
 
 
 def page_not_found(request, exception):
