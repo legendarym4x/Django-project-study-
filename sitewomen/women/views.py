@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
 
-from .models import Women
+from .models import Women, Category
 
 menu = [
     {'title': "About us", 'url_name': 'about'},
@@ -20,12 +20,6 @@ data_db = [
      ''', 'is_published': True},
     {'id': 2, 'title': 'Margot Robbie', 'content': 'Margot Robbie Biography', 'is_published': False},
     {'id': 3, 'title': 'Julia Roberts', 'content': 'Julia Roberts Biography', 'is_published': True},
-]
-
-cats_db = [
-    {'id': 1, 'name': 'Actresses'},
-    {'id': 2, 'name': 'Singers'},
-    {'id': 3, 'name': 'Sportswomen'},
 ]
 
 
@@ -68,12 +62,15 @@ def login(request):
     return HttpResponse('Sign In')
 
 
-def show_category(request, cat_id):
+def show_category(request, cat_slug):
+    category = get_object_or_404(Category, slug=cat_slug)
+    posts = Women.published.filter(cat_id=category.pk)
+
     data = {
-        'title': 'Main page',
+        'title': f'Heading: {category.name}',
         'menu': menu,
-        'posts': data_db,
-        'cat_selected': cat_id,
+        'posts': posts,
+        'cat_selected': category.pk,
     }
     return render(request, 'women/index.html', context=data)
 
