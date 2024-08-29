@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
 
-from .models import Women, Category
+from .models import Women, Category, TagPost
 
 menu = [
     {'title': "About us", 'url_name': 'about'},
@@ -77,3 +77,17 @@ def show_category(request, cat_slug):
 
 def page_not_found(request, exception):
     return HttpResponseNotFound('<h1>Page Not Found</p>')
+
+
+def show_tag_postlist(request, tag_slug):
+    tag = get_object_or_404(TagPost, slug=tag_slug)
+    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED)
+
+    data = {
+        'title': f"Tag: {tag.tag}",
+        'menu': menu,
+        'posts': posts,
+        'cat_selected': None
+    }
+
+    return render(request, 'women/index.html', context=data)
