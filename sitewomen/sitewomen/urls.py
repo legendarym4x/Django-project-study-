@@ -29,4 +29,4 @@ urlpatterns = [
 handler404 = page_not_found
 
 admin.site.site_header = "Admin's panel"
-admin.site.index_header = "Famous women of the world"
+admin.site.index_title = "Famous women of the world"
