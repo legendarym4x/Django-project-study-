@@ -12,19 +12,9 @@ menu = [
     {'title': "Sign In", 'url_name': 'login'}
 ]
 
-data_db = [
-    {'id': 1, 'title': 'Angelina Jolie', 'content': '''<h1>Angelina Jolie</h1> (born Angelina Jolie[7], formerly Jolie
-     Pitt; born June 4, 1975, Los Angeles, California, USA) is an American film, television and voice actress, film 
-     director, screenwriter, producer, model, and UN Goodwill Ambassador. Winner of an Academy Award, three Golden Globe
-     Awards (the first actress in history to win the award three years in a row), and two Screen Actors Guild Awards.
-     ''', 'is_published': True},
-    {'id': 2, 'title': 'Margot Robbie', 'content': 'Margot Robbie Biography', 'is_published': False},
-    {'id': 3, 'title': 'Julia Roberts', 'content': 'Julia Roberts Biography', 'is_published': True},
-]
 
-
-def index(request):  # HttpRequest
-    posts = Women.objects.all()
+def index(request):
+    posts = Women.published.all().select_related('cat')
 
     data = {
         'title': 'Main page',
@@ -64,7 +54,7 @@ def login(request):
 
 def show_category(request, cat_slug):
     category = get_object_or_404(Category, slug=cat_slug)
-    posts = Women.published.filter(cat_id=category.pk)
+    posts = Women.published.filter(cat_id=category.pk).select_related('cat')
 
     data = {
         'title': f'Heading: {category.name}',
@@ -81,7 +71,7 @@ def page_not_found(request, exception):
 
 def show_tag_postlist(request, tag_slug):
     tag = get_object_or_404(TagPost, slug=tag_slug)
-    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED)
+    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED).select_related('cat')
 
     data = {
         'title': f"Tag: {tag.tag}",
