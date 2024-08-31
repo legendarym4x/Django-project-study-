@@ -22,6 +22,7 @@ class AddPostForm(forms.ModelForm):
         title = self.cleaned_data['title']
         if len(title) > 50:
             raise ValidationError('Length exceeds 50 characters')
+        return title
 
 
 class UploadFileForm(forms.Form):
