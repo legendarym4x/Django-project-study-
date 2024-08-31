@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
 
-from .models import Women, Category, TagPost
+from .forms import AddPostForm, UploadFileForm
+from .models import Women, Category, TagPost, UploadFiles
 
 menu = [
     {'title': "About us", 'url_name': 'about'},
@@ -25,8 +26,22 @@ def index(request):
     return render(request, 'women/index.html', context=data)
 
 
+# def handle_uploaded_file(f):
+#     with open(f"uploads/{f.name}", "wb+") as destination:
+#         for chunk in f.chunks():
+#             destination.write(chunk)
+
+
 def about(request):
-    return render(request, 'women/about.html', {'title': 'About us', 'menu': menu})
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            fp = UploadFiles(file=form.cleaned_data['file'])
+            fp.save()
+    else:
+        form = UploadFileForm()
+    return render(request, 'women/about.html',
+                  {'title': 'About us', 'menu': menu, 'form': form})
 
 
 def show_post(request, post_slug):
@@ -41,7 +56,26 @@ def show_post(request, post_slug):
 
 
 def add_page(request):
-    return render(request, 'women/addpage.html', {'menu': menu, 'title': 'Add article'})
+    if request.method == 'POST':
+        form = AddPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            # print(form.cleaned_data)
+            # try:
+            #     Women.objects.create(**form.cleaned_data)
+            #     return redirect('home')
+            # except:
+            #     form.add_error(None, 'Adding post error')
+            form.save()
+            return redirect('home')
+    else:
+        form = AddPostForm()
+
+    data = {
+        'menu': menu,
+        'title': 'Add article',
+        'form': form
+    }
+    return render(request, 'women/addpage.html', data)
 
 
 def contact(request):
