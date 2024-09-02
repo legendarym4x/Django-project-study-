@@ -32,27 +32,23 @@ class Women(models.Model):
     objects = models.Manager()
     published = PublishedManager()
 
+    def __str__(self):
+        return self.title
 
-def __str__(self):
-    return self.title
+    class Meta:
+        verbose_name = 'Famous women'
+        verbose_name_plural = 'Famous women'
+        ordering = ['-time_create']
+        indexes = [
+            models.Index(fields=['-time_create'])
+        ]
 
+    def get_absolute_url(self):
+        return reverse('post', kwargs={'post_slug': self.slug})
 
-class Meta:
-    verbose_name = 'Famous women'
-    verbose_name_plural = 'Famous women'
-    ordering = ['-time_create']
-    indexes = [
-        models.Index(fields=['-time_create'])
-    ]
-
-
-def get_absolute_url(self):
-    return reverse('post', kwargs={'post_slug': self.slug})
-
-
-# def save(self, *args, **kwargs):
-#     self.slug = slugify(self.title)
-#     super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(self.title)
+    #     super().save(*args, **kwargs)
 
 
 class Category(models.Model):
